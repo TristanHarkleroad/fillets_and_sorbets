@@ -1,23 +1,21 @@
-const express = require('express');
+var express = require("express");
+var bodyParser = require("body-parser");
+var exphbs = require("express-handlebars");
 
-// Setting up Express App
-// ============================================
-const app = express();
-const PORT = process.env.PORT || 4030;
+var app = express();
+var PORT = process.env.PORT || 3040;
 
-// Allow Express to handle data parsing
-app.use(express.urlencoded({ extended: true}));
-app.use(express.json());
-app.use(express.text());
+app.use(express.static("public"));
 
-app.use(express.static("app/public"));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-// Complete routing here ***
-// require("./app/")(app);
-// require("./app/")(app);
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
-// Start our server so that it can begin listening to client requests.
+var routes = require("./controllers/burgers_controller.js");
+app.use(routes);
+
 app.listen(PORT, function() {
-  // Log (server-side) when our server has started
   console.log("Server listening on: http://localhost:" + PORT);
 });
